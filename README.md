@@ -7,7 +7,6 @@ GAS（Google Apps Script）を軸に、Python と生成AI API を組み合わせ
 
 | Day | テーマ | 技術 | フォルダ |
 |---|---|---|---|
-| 1 | 領収書の写真をAIで読み取り、経費表に自動で記録 | AI画像読み取り, GAS | `days/day01-receipt-ocr` |
 
 ## フォルダ構成
 

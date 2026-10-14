@@ -18,6 +18,9 @@ node_modules/
 # 顧客データ・テスト用の実データ
 data/private/
 
+# Claude用の作業ルール（公開しない）
+CLAUDE.md
+
 # OS
 Thumbs.db
 desktop.ini
