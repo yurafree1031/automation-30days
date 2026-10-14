@@ -1,0 +1,24 @@
+# 秘密情報（APIキー等）は絶対にコミットしない
+.env
+.env.*
+!.env.example
+*.key
+credentials*.json
+.clasprc.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / clasp
+node_modules/
+
+# 顧客データ・テスト用の実データ
+data/private/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
