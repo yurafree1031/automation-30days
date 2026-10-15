@@ -14,6 +14,8 @@ venv/
 
 # Node / clasp
 node_modules/
+# 自分のApps ScriptプロジェクトのIDなので公開しない
+.clasp.json
 
 # 顧客データ・テスト用の実データ
 data/private/
@@ -25,3 +27,6 @@ CLAUDE.md
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# テスト用に生成した架空のレシート画像
+test-receipts/

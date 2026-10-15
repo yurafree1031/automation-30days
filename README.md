@@ -7,10 +7,11 @@ GAS（Google Apps Script）を軸に、Python と生成AI API を組み合わせ
 
 | Day | テーマ | 技術 | フォルダ |
 |---|---|---|---|
+| 1 | 領収書の写真をAIで読み取り、経費表に自動で記録 | GAS、Gemini API | [day01-receipt-ocr](days/day01-receipt-ocr/) |
 
 ## フォルダ構成
 
-- `days/dayNN-<名前>/` … 各日のデモ。中に `README.md`（Before/After・使い方・GIF）とコード
+- `days/dayNN-<名前>/` … 各日のデモ。中に `README.md`（Before/After・使い方・GIF）とコード。GASのデモは [clasp](https://github.com/google/clasp) で管理しているので、`appsscript.json` も一緒に置いています
 - `lib/gas/` … GASの共通部品（2回目に使った処理をここへ移す）
 - `lib/python/` … Pythonの共通部品
 
