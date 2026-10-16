@@ -8,6 +8,7 @@ GAS（Google Apps Script）を軸に、Python と生成AI API を組み合わせ
 | Day | テーマ | 技術 | フォルダ |
 |---|---|---|---|
 | 1 | 領収書の写真をAIで読み取り、経費表に自動で記録 | GAS、Gemini API | [day01-receipt-ocr](days/day01-receipt-ocr/) |
+| 2 | フォームの問い合わせを一覧に転記して、担当者にメールで通知 | GAS、Googleフォーム、Gmail | [day02-form-notify](days/day02-form-notify/) |
 
 ## フォルダ構成
 

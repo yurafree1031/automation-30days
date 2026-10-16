@@ -9,5 +9,5 @@
 
 | 部品 | ファイル | 初出 | 内容 |
 |---|---|---|---|
-| AIの呼び出し | `gas/AI.gs` | Day 1 | Gemini・Claude・OpenAI を同じ書き方で呼ぶ `askAI_`。APIキーはAIごとの名前のスクリプトプロパティ（`GEMINI_API_KEY` など）に書き、書いてあるキーのAIを使う。混雑時のやり直し（`deadline` を渡すと、その時刻を過ぎるやり直しはしない）、エラーの振り分け（E01〜E05。利用枠の上限は E05、画像1枚ごとの400系は AIBadRequestError）つき |
+| AIの呼び出し | `gas/AI.gs` | Day 1 | Gemini・Claude・OpenAI を同じ書き方で呼ぶ `askAI_`。APIキーはAIごとの名前のスクリプトプロパティ（`GEMINI_API_KEY`・`CLAUDE_API_KEY`・`OPENAI_API_KEY`）に書き、書いてあるキーのAIを使う。混雑時のやり直し（`deadline` を渡すと、その時刻を過ぎるやり直しはしない）、エラーの振り分け（E01〜E05。利用枠の上限は E05、画像1枚ごとの400系は AIBadRequestError）つき |
 | エラーの種類 | `gas/Errors.gs` | Day 1 | UserError（使う人が直す）・RetryLaterError（時間をおけば直る）・AdminError（管理者が直す、番号つき） |

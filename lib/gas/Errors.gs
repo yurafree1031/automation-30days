@@ -5,13 +5,8 @@
  * - AdminError:      管理者でないと直せない（APIキーなど）→ 「管理者に連絡」と番号・内容を通知する
  * - それ以外:        想定外のエラー（プログラムの不具合など）→ 製作者が直す
  *
- * AdminError の番号（README の「管理者向け：エラー番号の一覧」と合わせる）
- *   E01 APIキーが設定されていない
- *   E02 APIキーが正しくない
- *   E03 AIのモデルが使えない
- *   E04 AIとの通信でそのほかのエラー
- *   E05 AIの利用枠（料金の残高・上限、無料枠の上限）に達している
- *   E06 処理済み／未処理フォルダの画像を移せない（編集権限がない、など）。Day 1 の Code.gs が投げる
+ * AdminError の番号は、各デモの README の「管理者向け：エラー番号の一覧」と合わせる
+ *   E01〜E05 は AI の部品（AI.gs）で使う。それ以外の番号は、各デモの Code.gs の先頭に書く
  */
 class UserError extends Error {}
 class RetryLaterError extends Error {}

@@ -1,0 +1,5 @@
+# clasp で Apps Script に送らないもの（開発用）
+tests/**
+tools/**
+test-receipts/**
+**/*.md
