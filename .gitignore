@@ -22,6 +22,7 @@ data/private/
 
 # Claude用の作業ルール（公開しない）
 CLAUDE.md
+rulebook/
 
 # OS
 Thumbs.db

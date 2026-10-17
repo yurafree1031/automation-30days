@@ -1,13 +1,13 @@
-# Day 1 テストケース
+# テストケース
 
 領収書の写真をAIで読み取り、経費表に記録するデモのテストケース。
 
-- 手元のテスト: `automation-30days` フォルダで次を実行する（GASの部品は偽物に差し替えている。AIは呼ばない）
+- 手元のテスト: `portfolio` フォルダで次を実行する（GASの部品は偽物に差し替えている。AIは呼ばない）
   ```
-  node --test "days/day01-receipt-ocr/tests/*.test.js"
+  node --test "demos/receipt-ocr/tests/*.test.js"
   ```
-- 実際のAIを使うテスト（N29・N30・N32・N49・E19）は、`node days/day01-receipt-ocr/tests/accuracy.js`（使い方はファイルの先頭）で、コマンド1つで回せる。結果は `tests/accuracy-results/` に日時つきで残る。合格の条件は「色が付かずに間違って通った行が0件」
-- AI.gs（AIの呼び出し部品）のテストは、重複を避けて `lib/gas/tests/AI.test.js` で行う（`node --test lib/gas/tests/AI.test.js`）。N14 で、Day 1 の AI.gs・Errors.gs が lib と同じ内容であることを確かめている
+- 実際のAIを使うテスト（N29・N30・N32・N49・E19）は、`node demos/receipt-ocr/tests/accuracy.js`（使い方はファイルの先頭）で、コマンド1つで回せる。結果は `tests/accuracy-results/` に日時つきで残る。合格の条件は「色が付かずに間違って通った行が0件」
+- AI.gs（AIの呼び出し部品）のテストは、重複を避けて `lib/gas/tests/AI.test.js` で行う（`node --test lib/gas/tests/AI.test.js`）。N14 で、このデモの AI.gs・Errors.gs が lib と同じ内容であることを確かめている
 - 実行日: 2026-10-15（2回目の評価の指摘を反映し、ユーザーのチェック後）。手元のテスト89件＋lib 14件がすべて合格。ブラウザは、AIを呼ばずに確かめられるもの（見た目・入力規則）だけ実施。実際のAIを使うテストは、ユーザーの指示でスキップ（通ったものとして扱う）
 - 結果の記号: ○ 合格 / × 不合格 / 未実施 = ブラウザや実際のAIが必要
 

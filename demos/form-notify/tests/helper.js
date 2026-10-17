@@ -1,4 +1,4 @@
-// Day 2 の手元テスト用の共通部品。GAS の部品（スプレッドシート・フォーム・メールなど）を、メモリ上の偽物に差し替えて Code.gs を動かす
+// 問い合わせ通知のデモの手元テスト用の共通部品。GAS の部品（スプレッドシート・フォーム・メールなど）を、メモリ上の偽物に差し替えて Code.gs を動かす
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
@@ -351,7 +351,7 @@ function load({ me = 'office@example.com' } = {}) {
   };
   vm.createContext(ctx);
   const code = SOURCES.map((f) => fs.readFileSync(path.join(DEMO_DIR, f), 'utf8')).join('\n');
-  vm.runInContext(`${code}\n${EXPORTS.map((n) => `globalThis.${n} = ${n};`).join('\n')}\nglobalThis.VMDate = Date;`, ctx, { filename: 'day02' });
+  vm.runInContext(`${code}\n${EXPORTS.map((n) => `globalThis.${n} = ${n};`).join('\n')}\nglobalThis.VMDate = Date;`, ctx, { filename: 'form-notify' });
   // Code.gs の「instanceof Date」が効くよう、テストで作る日付は GAS 側の Date で作る
   form.DateCtor = ctx.VMDate;
   return { ctx, ss, form, env };

@@ -1,6 +1,6 @@
 # tests
 
-Day 1 のテスト。お客様には渡さない（`.claspignore` で Apps Script には送らない）。
+このデモのテスト。お客様には渡さない（`.claspignore` で Apps Script には送らない）。
 
 | ファイル | 内容 | 実行 |
 |---|---|---|
@@ -14,10 +14,10 @@ Day 1 のテスト。お客様には渡さない（`.claspignore` で Apps Scrip
 
 ## 手元のテスト（AIを使わない）
 
-`automation-30days` フォルダで実行する。
+`portfolio` フォルダで実行する。
 
 ```
-node --test "days/day01-receipt-ocr/tests/*.test.js"
+node --test "demos/receipt-ocr/tests/*.test.js"
 node --test lib/gas/tests/AI.test.js
 ```
 
@@ -26,9 +26,9 @@ node --test lib/gas/tests/AI.test.js
 AIの利用枠を使うので、`node --test` には含めていない。キーは環境変数で渡す（ファイルには書かない）。
 
 ```
-GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js            # 先頭の10枚
-GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js --extras   # 例外の領収書だけ
-GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js --all      # 100枚＋例外
+GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js            # 先頭の10枚
+GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js --extras   # 例外の領収書だけ
+GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js --all      # 100枚＋例外
 ```
 
 - 結果は `accuracy-results/<日時>-<モデル>.md` に残る（前の結果は消えない）。合格の条件は「色が付かずに間違って通った行が0件」。

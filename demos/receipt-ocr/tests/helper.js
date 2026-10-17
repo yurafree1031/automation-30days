@@ -1,4 +1,4 @@
-// Day 1 の手元テスト用の共通部品。GAS の部品（スプレッドシート・ドライブなど）を、メモリ上の偽物に差し替えて Code.gs などを動かす
+// 領収書のデモの手元テスト用の共通部品。GAS の部品（スプレッドシート・ドライブなど）を、メモリ上の偽物に差し替えて Code.gs などを動かす
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');

@@ -150,7 +150,7 @@ test('E06 フォルダを開けないとき: 使用者向けのエラーで、�
 });
 
 // ---- 配布物の確認 ----
-test('N14 Day 1 の AI.gs・Errors.gs は、lib/gas の部品と同じ内容', () => {
+test('N14 このデモの AI.gs・Errors.gs は、lib/gas の部品と同じ内容', () => {
   for (const f of ['AI.gs', 'Errors.gs']) {
     const lib = fs.readFileSync(path.join(DEMO_DIR, '..', '..', 'lib', 'gas', f), 'utf8');
     const demo = fs.readFileSync(path.join(DEMO_DIR, f), 'utf8');

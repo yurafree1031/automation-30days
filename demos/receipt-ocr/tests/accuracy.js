@@ -1,11 +1,11 @@
 // 実際のAIで、読み取りの正確さを確かめる（テストケース N29・N30・N32・E19）。AIを使うので、`node --test` には含めない。
-// 確かめ方の考え方は ノウハウ/AIの精度の確かめ方.md（合格の目安・自信度の帯・間違いの種類・記録の残し方）
+// 確かめ方の考え方は rulebook/AIの精度の確かめ方.md（合格の目安・自信度の帯・間違いの種類・記録の残し方）
 //
-// 使い方（automation-30days フォルダで）:
-//   GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js            … 先頭の10枚
-//   GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js --limit 30
-//   GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js --extras   … 例外の領収書（extra_*）だけ
-//   GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js --all      … すべて（100枚＋例外）
+// 使い方（portfolio フォルダで）:
+//   GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js            … 先頭の10枚
+//   GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js --limit 30
+//   GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js --extras   … 例外の領収書（extra_*）だけ
+//   GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js --all      … すべて（100枚＋例外）
 //   Claude・OpenAI で試すときは CLAUDE_API_KEY・OPENAI_API_KEY（本番のスクリプトプロパティと同じ名前）
 //   AI_MODEL=<モデル名> を付けると、使うモデルを変えられる（付けなければ AI.gs の初期値）
 //   PRICE_IN=<ドル> PRICE_OUT=<ドル> で、100万トークンあたりの単価を変えられる（費用の見積もりに使う）
@@ -42,7 +42,7 @@ for (const name of [...KEY_NAMES, 'AI_PROVIDER', 'AI_MODEL']) {
 }
 if (process.env.ACCURACY_FAKE && !KEY_NAMES.some((n) => props[n])) props.GEMINI_API_KEY = 'FAKE';
 if (!KEY_NAMES.some((n) => props[n])) {
-  console.error('APIキーが設定されていません。例: GEMINI_API_KEY=<キー> node days/day01-receipt-ocr/tests/accuracy.js');
+  console.error('APIキーが設定されていません。例: GEMINI_API_KEY=<キー> node demos/receipt-ocr/tests/accuracy.js');
   process.exit(2);
 }
 
@@ -191,7 +191,7 @@ for (const [label, s] of [['色なし（緑）', 'green'], ['黄色（要確認�
 }
 lines.push('', `**色が付かずに間違って通った行: ${silentErrors.length}件**（合格の条件は 0 件）`);
 
-// 自信度の帯ごと: 黄色・赤の基準を決め直すための材料（ノウハウ/AIの精度の確かめ方.md の 4）
+// 自信度の帯ごと: 黄色・赤の基準を決め直すための材料（rulebook/AIの精度の確かめ方.md の 4）
 lines.push('', '## 自信度の帯ごと（基準を決め直す材料）', '', '| 自信度 | 枚数 | 正しい | 間違い | 正解率 |', '|---|---|---|---|---|');
 for (const [label, lo, hi] of [['90以上', 90, 101], ['70〜89', 70, 90], ['50〜69', 50, 70], ['50未満', 0, 50]]) {
   const g = normal.filter((x) => x.conf >= lo && x.conf < hi);
