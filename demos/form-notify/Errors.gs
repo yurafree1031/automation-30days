@@ -17,3 +17,10 @@ class AdminError extends Error {
     this.detail = detail || '';
   }
 }
+
+/** エラーを、見る人が分かる文にする（想定外のエラーの中身は、管理者が「実行数」のログで見る） */
+function errorText_(e) {
+  if (e instanceof AdminError) return `[${e.code}] ${e.message}　${e.detail}`;
+  if (e instanceof UserError) return e.message;
+  return '[E99] 想定外のエラーが起きました。製作者に連絡してください（Apps Script の「実行数」に詳しい内容があります）';
+}

@@ -353,7 +353,8 @@ test('N34 結果は「実行」シートにも残る。未処理フォルダへ�
   env.ctx.onOpen();
   env.ctx.processReceipts();
   const run = env.ss.getSheetByName('実行');
-  assert.strictEqual(run.getRange('B10').getValue(), '10/15 12:00　記録 2件　エラー 1件');
+  const today = new Date().toISOString(); // 偽の formatDate は「今日の月/日 12:00」を返す
+  assert.strictEqual(run.getRange('B10').getValue(), `${Number(today.slice(5, 7))}/${Number(today.slice(8, 10))} 12:00　記録 2件　エラー 1件`);
   assert.strictEqual(run.links.get('19,2'), 'https://drive.example/folder/INBOX');
 });
 

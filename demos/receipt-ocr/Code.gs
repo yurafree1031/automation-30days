@@ -474,11 +474,6 @@ function categoryRule_(settings) {
     .setHelpText('勘定科目は一覧から選んでください。足したいときは「設定」シートのD列に書きます').build();
 }
 
-/** 表の見出しの見た目（太字・薄いグレー・下に罫線） */
-function styleHeader_(range) {
-  range.setFontWeight('bold').setBackground(HEADER_COLOR).setBorder(null, null, true, null, null, null);
-}
-
 /**
  * 経費表の文字が切れないよう、列幅を広げ、長くなる列は折り返す
  * 幅は初期値（100）のままの列だけ変える。使う人が自分で変えた幅はそのまま

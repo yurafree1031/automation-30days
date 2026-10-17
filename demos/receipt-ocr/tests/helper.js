@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 
 const DEMO_DIR = path.join(__dirname, '..');
-const SOURCES = ['Errors.gs', 'AI.gs', 'Code.gs', 'Chart.gs', 'Button.gs'];
+const SOURCES = ['Errors.gs', 'Sheet.gs', 'AI.gs', 'Code.gs', 'Chart.gs', 'Button.gs'];
 // class・const はファイルの外から見えないので、最後に必要なものを globalThis に出す
 const EXPORTS = [
   'UserError', 'RetryLaterError', 'AdminError', 'AIUnreadableError', 'AIUnsupportedFileError', 'AIBadRequestError',

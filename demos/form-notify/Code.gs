@@ -91,7 +91,6 @@ const PROP = {
   SENDER: 'NOTIFY_SENDER', // 通知を送るアカウント（最後に「通知を始める」を押した人）
   STOPPED: 'NOTIFY_STOPPED', // 「通知を止める」で '1'
   CHOICES: 'TYPE_CHOICES', // 担当者を決める質問の選択肢（「担当者」シートの答えの確かめに使う。選択式でなければ空）
-  ALERT_PREFIX: 'ALERT_SENT_', // 管理者へのエラーのメールを、同じ内容は1日1通にするための記録
   BUTTON_SECRET: 'BUTTON_SECRET', // 「対応を始める」ボタンのリンクが、このツールが作ったものかを確かめる合言葉（自動で作る）
 };
 
@@ -935,30 +934,15 @@ function reminderMail_(person, items, listUrl) {
 
 // ---- 管理者への知らせ ----
 
-/**
- * 管理者にメールで知らせる。同じ key の知らせは1日1通まで（同じエラーが何十通も届かないように）
- * key が null なら毎回送る。送れたら true（管理者のメールアドレスがない・送信数の上限なら false）
- */
+/** 管理者にメールで知らせる（同じ key は1日1通。null なら毎回）。送れたら true */
 function alertAdmin_(key, subject, lines) {
-  try {
-    const props = PropertiesService.getScriptProperties();
-    const today = Utilities.formatDate(new Date(), TIME_ZONE, 'yyyy-MM-dd');
-    if (key && props.getProperty(PROP.ALERT_PREFIX + key) === today) return true;
-    const admin = String(ensureStaffSheet_().cells.admin.getValue()).trim();
-    if (!isEmail_(admin) || MailApp.getRemainingDailyQuota() < 1) return false;
-    const url = SpreadsheetApp.getActive().getUrl();
-    MailApp.sendEmail({
-      to: admin,
-      subject: `【問い合わせ管理】${subject}`,
-      body: lines.concat(['', `スプレッドシート: ${url}`, 'エラー番号ごとの直し方は、説明書の「エラー番号の一覧」を見てください。']).join('\n'),
-      name: CONFIG.MAIL_SENDER_NAME,
-    });
-    if (key) props.setProperty(PROP.ALERT_PREFIX + key, today);
-    return true;
-  } catch (e) {
-    Logger.log(`管理者に知らせられません: ${e.stack || e}`);
-    return false;
-  }
+  return sendAdminAlert_({
+    to: ensureStaffSheet_().cells.admin.getValue(),
+    key,
+    subject: `【問い合わせ管理】${subject}`,
+    lines,
+    senderName: CONFIG.MAIL_SENDER_NAME,
+  });
 }
 
 /** 新しく送れなくなった問い合わせを、まとめて管理者に知らせる */
@@ -971,27 +955,6 @@ function alertAdminFailed_(failed) {
 }
 
 // ---- シート ----
-
-/** 見出しの行を探す（上から20行の中で、label と同じ文字のセルがある行）。なければ 0 */
-function findHeaderRow_(sheet, label) {
-  const rows = Math.min(sheet.getLastRow(), 20);
-  const cols = sheet.getLastColumn();
-  if (rows === 0 || cols === 0) return 0;
-  const i = sheet.getRange(1, 1, rows, cols).getValues().findIndex((r) => r.some((v) => String(v).trim() === label));
-  return i + 1;
-}
-
-/** 見出しの名前 → 列番号 */
-function headerMap_(sheet, headerRow) {
-  const lastCol = sheet.getLastColumn();
-  if (lastCol === 0) return {};
-  const map = {};
-  sheet.getRange(headerRow, 1, 1, lastCol).getValues()[0].forEach((v, i) => {
-    const name = String(v).trim();
-    if (name && !map[name]) map[name] = i + 1;
-  });
-  return map;
-}
 
 /**
  * 「問い合わせ一覧」がなければ作る。足りない列（管理用の列・フォームの質問）を足し、見た目をそろえる
@@ -1076,16 +1039,6 @@ function applyListLayout_(sheet, headerRow, questions) {
   wraps.forEach((name) => { if (cols[name]) col(name).setWrap(true); });
 }
 
-/** 見出しの行に、消そうとすると警告が出る保護を付ける（1つだけ。行が動いても保護は一緒に動く） */
-function protectHeader_(sheet, range) {
-  try {
-    const exists = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE).some((p) => p.getDescription() === PROTECT_NOTE);
-    if (!exists) range.protect().setDescription(PROTECT_NOTE).setWarningOnly(true);
-  } catch (e) {
-    Logger.log(e.stack || e); // 保護を付けられなくても、動きには関係しない
-  }
-}
-
 /** 「状態」のセルに、未対応・対応中・完了の色を付ける（条件付き書式。使う人が選び直すと、すぐ色が変わる） */
 function applyStatusColors_(sheet, range) {
   // 前に付けた状態の色だけ外して付け直す（使う人が自分で足した条件付き書式は残す）
@@ -1113,20 +1066,9 @@ function countUnsent_({ sheet, headerRow, cols }) {
 
 /** 自動の処理で起きたエラーを、一覧の上に赤い帯で書く（空文字なら消す） */
 function setListAlert_(text) {
-  try {
-    const sheet = SpreadsheetApp.getActive().getSheetByName(CONFIG.LIST_SHEET_NAME);
-    if (!sheet || findHeaderRow_(sheet, LIST_HEAD[0]) <= LIST_ALERT_ROW) return;
-    const band = sheet.getRange(LIST_ALERT_ROW, 1, 1, sheet.getMaxColumns());
-    if (!text) {
-      if (sheet.getRange(LIST_ALERT_ROW, 1).getValue() !== '') band.clearContent().setBackground(null);
-      return;
-    }
-    const stamp = Utilities.formatDate(new Date(), TIME_ZONE, 'M/d HH:mm');
-    sheet.getRange(LIST_ALERT_ROW, 1).setValue(`${stamp}　${text.replace(/\n/g, '　')}`);
-    band.setBackground(ERROR_ROW_COLOR);
-  } catch (e) {
-    Logger.log(e.stack || e); // 書けなくても、管理者へのメールで分かる
-  }
+  const sheet = SpreadsheetApp.getActive().getSheetByName(CONFIG.LIST_SHEET_NAME);
+  if (!sheet || findHeaderRow_(sheet, LIST_HEAD[0]) <= LIST_ALERT_ROW) return;
+  setAlertBand_(sheet, LIST_ALERT_ROW, text);
 }
 
 /**
@@ -1298,16 +1240,4 @@ function openForm_() {
     Logger.log(`フォームを開けません（${url}）: ${e.stack || e}`);
     throw new AdminError('E14', 'フォームを開けません', 'フォームが消されたか、「通知を始める」を押した人がフォームの編集者から外れています');
   }
-}
-
-/** 表の見出しの見た目（太字・薄いグレー・下に罫線） */
-function styleHeader_(range) {
-  range.setFontWeight('bold').setBackground(HEADER_COLOR).setBorder(null, null, true, null, null, null);
-}
-
-/** エラーを、見る人が分かる文にする（想定外のエラーの中身は、管理者が「実行数」のログで見る） */
-function errorText_(e) {
-  if (e instanceof AdminError) return `[${e.code}] ${e.message}　${e.detail}`;
-  if (e instanceof UserError) return e.message;
-  return '[E99] 想定外のエラーが起きました。製作者に連絡してください（Apps Script の「実行数」に詳しい内容があります）';
 }
